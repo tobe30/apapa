@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/create", protectRoute, createQuestion);
 router.get("/search", protectRoute, searchPlaces);
-router.get("/", protectRoute, getQuestions);
+router.get("/", getQuestions);
 router.get("/:id", protectRoute, getQuestionById);
 router.post("/upvote/:id", protectRoute, QuestionUpvote);
 router.post("/downvote/:id", protectRoute, QuestionDownvote);

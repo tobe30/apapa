@@ -15,10 +15,74 @@ import travel2 from "../assets/keke.jpg";
 import avatar1 from "../assets/avatar-1.jpg";
 import avatar2 from "../assets/avatar-2.jpg";
 import avatar3 from "../assets/avatar-3.jpg";
-
+import { useNavigate } from "react-router-dom";
+import { getAllQuestions, getAuthUser } from "../lib/api";
+import { useQuery } from "@tanstack/react-query";
 const chips = ["Apapa", "Awka", "Festac", "Lekki", "Yaba"];
 
 const Hero = () => {
+
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+  const handleKeyDown = (e) => {
+  if (e.key === "Enter") handleSearch();
+};
+
+const { data: authData } = useQuery({
+  queryKey: ["authUser"],
+  queryFn: getAuthUser,
+});
+const handleSearch = () => {
+  const q = search.trim();
+  if (!q) return;
+
+  const isLoggedIn = !!authData?.user;
+
+  if (!isLoggedIn) {
+    alert("Please login to search");
+
+    navigate("/login", {
+      state: { from: `/feed?query=${encodeURIComponent(q)}` },
+    });
+    
+    return;
+  }
+
+  navigate(`/feed?query=${encodeURIComponent(q)}`);
+};
+
+const { data } = useQuery({
+  queryKey: ["questions"],
+  queryFn: getAllQuestions,
+});
+
+const questions = data?.questions || [];
+
+console.log("QUESTIONS:", questions);
+
+const trendingPlacesMap = questions.reduce((acc, q) => {
+  const placeId = q?.place?._id;
+  const placeName = q?.place?.name?.trim();
+
+  if (!placeId || !placeName) return acc;
+
+  if (!acc[placeId]) {
+    acc[placeId] = {
+      id: placeId,
+      name: placeName,
+      count: 0,
+    };
+  }
+
+  acc[placeId].count += 1;
+
+  return acc;
+}, {});
+
+const trendingPlaces = Object.values(trendingPlacesMap)
+  .sort((a, b) => b.count - a.count)
+  .slice(0, 5);
+
   return (
     <section id="places" className="relative pt-28 pb-20 lg:pt-36 lg:pb-28 overflow-hidden ">
       
@@ -54,29 +118,35 @@ const Hero = () => {
   
   <Search className="w-5 h-5 text-muted-foreground ml-2" />
 
-  <input
-    type="text"
-    placeholder="Search a city, area, school or landmark..."
-    className="flex-1 bg-transparent outline-none py-3 text-sm placeholder:text-muted-foreground"
-  />
+<input
+  type="text"
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  onKeyDown={handleKeyDown}
+  placeholder="Search a city, area, school or landmark..."
+  className="flex-1 bg-transparent outline-none py-3 text-sm placeholder:text-muted-foreground"
+/>
 
-  <button className="px-5 py-2 rounded-xl bg-secondary text-white hover:opacity-90 flex items-center gap-2 text-sm font-medium">
-    Explore <ArrowRight className="w-4 h-4" />
-  </button>
+<button
+  onClick={handleSearch}
+  className="px-5 py-2 rounded-xl bg-secondary text-white hover:opacity-90 flex items-center gap-2 text-sm font-medium"
+>
+  Explore <ArrowRight className="w-4 h-4" />
+</button>
 
 </div>
 <div className="mt-5 flex flex-wrap items-center gap-2">
-
   <span className="px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary">
     Trending
   </span>
 
-  {chips.map((c) => (
+  {trendingPlaces.map((p) => (
     <button
-      key={c}
+      key={p.id}
+      onClick={() => navigate(`/feed?query=${encodeURIComponent(p.name)}`)}
       className="px-4 py-2 font-bold rounded-full bg-white/70 backdrop-blur-md border border-black/5 text-sm text-primary hover:bg-primary hover:text-white hover:border-primary transition-all"
     >
-      {c}
+      {p.name}
     </button>
   ))}
 </div>
@@ -84,7 +154,7 @@ const Hero = () => {
           {/* CTA */}
           <div className="mt-10 flex items-center gap-6">
 
-            <button className="px-7 py-3 rounded-full bg-secondary text-white hover:bg-black/90 flex items-center gap-2">
+            <button onClick={() => navigate("/feed")} className="px-7 py-3 rounded-full bg-secondary text-white hover:bg-black/90 flex items-center gap-2">
               Start exploring <ArrowRight className="w-4 h-4" />
             </button>
 
