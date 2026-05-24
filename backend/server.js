@@ -13,10 +13,12 @@ import connectCloudinary from "./lib/cloudinary.js";
 
 const app = express();
 app.use(express.json());
-await connectCloudinary();
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: [
+    "http://localhost:5173",
+    "https://apapa-six.vercel.app"
+  ],
   credentials: true,
 }))
 
@@ -40,6 +42,8 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   try {
     await connectDB();
+    await connectCloudinary();
+
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
