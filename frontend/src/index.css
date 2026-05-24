@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+@plugin "daisyui";
+
+
+
+:root {
+ 
+  --color-primary: #00026e; /* your primary color */
+  --color-secondary: #0008ca; /* your secondary color */
+  --color-primary-foreground: #fff; /* text color for primary buttons */
+}
+
+*{
+    font-family: Outfit;
+}
+@layer base{
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
