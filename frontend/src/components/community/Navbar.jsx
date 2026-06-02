@@ -30,10 +30,7 @@ const Navbar = () => {
 
 const logoutMutation = useMutation({
   mutationFn: logout,
-  onSuccess: () => {
-    queryClient.clear(); // clears cached user + feed
-    navigate("/");   // or "/"
-  },
+  onSuccess: () => queryClient.invalidateQueries({queryKey: ["authUser"]})
 });
 
   const submitSearch = (e) => {

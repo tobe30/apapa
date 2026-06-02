@@ -1,8 +1,8 @@
 const FeedSkeleton = () => {
   return (
-    <div className="space-y-4 animate-pulse">
+    <div className="space-y-4 animate-pulse bg-white">
       {/* Header skeleton */}
-      <div className="bg-base-200 rounded-lg p-4 space-y-3">
+      <div className="bg-white rounded-lg p-4 space-y-3">
         <div className="flex gap-3 items-center">
           <div className="w-10 h-10 rounded-full bg-base-300" />
           <div className="space-y-2 flex-1">
