@@ -10,8 +10,6 @@ import {
   Compass,
 } from "lucide-react";
 
-import travel1 from "../assets/lagos.jpg";
-import travel2 from "../assets/keke.jpg";
 import avatar1 from "../assets/avatar-1.jpg";
 import avatar2 from "../assets/avatar-2.jpg";
 import avatar3 from "../assets/avatar-3.jpg";
@@ -201,7 +199,7 @@ const trendingPlaces = Object.values(trendingPlacesMap)
             {/* Main tall image */}
             <div className="absolute top-0 left-0 w-[62%] h-[78%] rounded-[2rem] overflow-hidden shadow-elevated">
               <img
-                src={travel1}
+                src="/lagos.jpg"
                 alt="Explorer overlooking a coastal landscape"
                 className="w-full h-full object-cover"
               />
@@ -212,7 +210,7 @@ const trendingPlaces = Object.values(trendingPlacesMap)
             {/* Secondary image card */}
             <div className="absolute right-0 top-[28%] w-[55%] aspect-[4/5] rounded-[2rem] overflow-hidden shadow-elevated border-4 border-white">
               <img
-                src={travel2}
+                src="/keke.jpg"
                 alt="Traveler at a scenic viewpoint"
                 className="w-full h-full object-cover"
               />

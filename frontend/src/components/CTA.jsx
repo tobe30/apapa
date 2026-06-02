@@ -1,5 +1,4 @@
 import { ArrowUpRight, MapPin } from "lucide-react";
-import ctaBg from "../assets/opey.jpg";
 import { useNavigate } from "react-router-dom";
 
 const CTA = () => {
@@ -8,7 +7,7 @@ const CTA = () => {
   return (
     <section className="relative py-24 lg:py-32 px-6">
       <div className="mx-auto max-w-7xl relative rounded-[2.5rem] overflow-hidden shadow-elevated">
-        <img src={ctaBg} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover scale-110" />
+        <img src="/opey.jpg" alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover scale-110" />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/70 to-foreground/80" />
         <div className="absolute inset-0 grid-overlay opacity-20" />
         <div className="absolute -top-32 -right-20 w-[400px] h-[400px] rounded-full bg-primary-glow/40 blur-3xl" />
