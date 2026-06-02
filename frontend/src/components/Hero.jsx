@@ -168,6 +168,7 @@ const trendingPlaces = Object.values(trendingPlacesMap)
           key={i}
           src={a}
           alt=""
+          loading="lazy" decoding="async"
           className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-white object-cover"
         />
       ))}
@@ -202,6 +203,8 @@ const trendingPlaces = Object.values(trendingPlacesMap)
                 src="/lagos.jpg"
                 alt="Explorer overlooking a coastal landscape"
                 className="w-full h-full object-cover"
+                loading="lazy" 
+                decoding="async"
               />
             </div>
 
@@ -213,6 +216,8 @@ const trendingPlaces = Object.values(trendingPlacesMap)
                 src="/keke.jpg"
                 alt="Traveler at a scenic viewpoint"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
               {/* badge */}
               <div className="absolute bottom-3 left-3 right-3 flex items-center gap-2 bg-primary text-primary-foreground rounded-xl px-3 py-2 shadow-coral">
@@ -236,7 +241,7 @@ const trendingPlaces = Object.values(trendingPlacesMap)
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Trip insight</p>
                   <p className="text-sm font-bold text-primary leading-tight mt-0.5">Best time to visit Lekki Beach?</p>
                   <div className="flex items-center gap-2 mt-2">
-                    <img src={avatar1} alt="" className="w-5 h-5 rounded-full object-cover border border-background" />
+                    <img src={avatar1} alt="apapa" loading="lazy" decoding="async" className="w-5 h-5 rounded-full object-cover border border-background" />
                     <p className="text-[11px] text-white">Tunde · local guide</p>
                   </div>
                 </div>
