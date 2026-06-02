@@ -152,39 +152,44 @@ const trendingPlaces = Object.values(trendingPlacesMap)
 </div>
 
           {/* CTA */}
-          <div className="mt-10 flex items-center gap-6">
+          <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+  
+  {/* Button */}
+  <button
+    onClick={() => navigate("/feed")}
+    className="px-7 py-3 rounded-full bg-secondary text-white hover:bg-black/90 flex items-center gap-2 w-fit"
+  >
+    Start exploring <ArrowRight className="w-4 h-4" />
+  </button>
 
-            <button onClick={() => navigate("/feed")} className="px-7 py-3 rounded-full bg-secondary text-white hover:bg-black/90 flex items-center gap-2">
-              Start exploring <ArrowRight className="w-4 h-4" />
-            </button>
+  {/* Rating + avatars */}
+  <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
+    <div className="flex -space-x-3">
+      {[avatar1, avatar2, avatar3].map((a, i) => (
+        <img
+          key={i}
+          src={a}
+          alt=""
+          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-white object-cover"
+        />
+      ))}
+    </div>
 
-            <div className="flex items-center gap-4">
+    <div>
+      <div className="flex items-center gap-1 text-sm font-semibold">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Star key={i} className="w-3.5 h-3.5 fill-secondary text-secondary" />
+        ))}
+        <span className="ml-1">4.9</span>
+      </div>
 
-              <div className="flex -space-x-3">
-                {[avatar1, avatar2, avatar3].map((a, i) => (
-                  <img
-                    key={i}
-                    src={a}
-                    alt=""
-                    className="w-10 h-10 rounded-full border-2 border-white object-cover"
-                  />
-                ))}
-              </div>
+      <p className="text-xs text-gray-500 max-w-[200px] sm:max-w-none">
+        Trusted by 28k+ explorers across Nigeria
+      </p>
+    </div>
+  </div>
 
-              <div>
-                <div className="flex items-center gap-1 text-sm font-semibold">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-secondary text-secondary" />
-                  ))}
-                  <span className="ml-1">4.9</span>
-                </div>
-                <p className="text-xs text-gray-500">
-                  Trusted by 28k+ explorers across Nigeria
-                </p>
-              </div>
-
-            </div>
-          </div>
+</div>
         </div>
 
         {/* RIGHT */}
