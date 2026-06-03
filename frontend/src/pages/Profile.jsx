@@ -162,7 +162,7 @@ const { data: savedQuestions = [] } = useQuery({
 });
 
 const goToQuestion = (id) => {
-  navigate(`/question/${id}`);
+  navigate(`/feed/${id}`);
 };
 
 const userBadges = authData?.badges || [];
@@ -559,10 +559,17 @@ const renderContent = () => {
     {/* FOOTER */}
     <div className="flex items-center gap-5 mt-4 pt-4 border-t border-gray-100 text-gray-500 text-sm">
 
-      <div className="flex items-center gap-1">
-        <ThumbsUp size={16} />
-{post.stats?.upvotes || 0}
-      </div>
+      <div onClick={() => goToQuestion(post._id)} className="flex items-center gap-1">
+  <ThumbsUp
+    size={16}
+    className={
+      post.upvotedBy?.includes(authUser?.user?._id)
+        ? "text-primary fill-primary"
+        : "text-gray-500"
+    }
+  />
+  {post.stats?.upvotes || 0}
+</div>
 
 
 <div className="flex items-center gap-1">
@@ -722,6 +729,7 @@ const renderContent = () => {
     Recent activity
   </h3>
 
+{/* Recent Activities */}
   <div className="space-y-3 text-sm">
     {recentActivities.length > 0 ? (
       recentActivities.map((activity) => (

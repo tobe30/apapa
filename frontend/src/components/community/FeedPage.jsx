@@ -136,15 +136,17 @@ const saveMutation = useMutation({
 // const topContributors = leaderboardData?.leaderboard ?? [];
 
 const topContributors =
-  leaderboardData?.leaderboard?.map((u) => ({
-    id: u._id,
-    name: u.name,
-    image: u.profilePic || "/default.jpg",
-    points: u.points,
-    answers: 0, // backend doesn't have yet
-    badge: u.badges?.[u.badges.length - 1] || "Newbie",
-    verified: u.points >= 100, // simple rule
-  })) ?? [];
+  leaderboardData?.leaderboard
+    ?.slice(0, 5) // ✅ only show top 5
+    .map((u) => ({
+      id: u._id,
+      name: u.name,
+      image: u.profilePic || "/default.jpg",
+      points: u.points,
+      answers: 0,
+      badge: u.badges?.[u.badges.length - 1] || "Newbie",
+      verified: u.points >= 100,
+    })) ?? [];
 
   const handleTagClick = (tag) => {
   setSelectedTag((prev) => (prev === tag ? null : tag));
