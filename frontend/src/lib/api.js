@@ -10,20 +10,28 @@ export const getAuthUser = async () => {
     }
 }
 
-export const signup = async (registerData)=> {
+export const signup = async (registerData) => {
     const response = await axiosInstance.post("/auth/register", registerData);
+    if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+    }
     return response.data;
 };
 
-export const login = async (loginData)=> {
+export const login = async (loginData) => {
     const response = await axiosInstance.post("/auth/login", loginData);
+    if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+    }
     return response.data;
 };
 
-export const logout = async ()=> {
+export const logout = async () => {
+    localStorage.removeItem("token");
     const response = await axiosInstance.post("/auth/logout");
     return response.data;
 };
+
 
 export const addQuestion = async (questionData) => {
     const response = await axiosInstance.post("/questions/create", questionData);

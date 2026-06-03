@@ -44,11 +44,11 @@ export const Register = async (req, res) => {
       maxAge: 15*24*60*60*1000,
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "strict"
       //  secure: process.env.NODE_ENV !== "development",
     //   path: "/",
     });
-    return res.status(201).json({ success: true, user:newUser });
+    return res.status(201).json({ success: true, user:newUser, token });
 
     } catch (error) {
         console.error("Error in Register:", error);
@@ -90,7 +90,7 @@ export const Login = async (req, res) => {
       sameSite: "none"
     });
 
-   res.status(200).json({success: true, user});
+   res.status(200).json({success: true, user, token});
     } catch (error) {
         console.error("Error in Login:", error);
         return res.status(500).json({ message: "error in Login function" });
@@ -100,15 +100,12 @@ export const Login = async (req, res) => {
 export function logout(req, res) {
   res.clearCookie("jwt", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    path: "/",
+    secure: true,
+    sameSite: "none", // 👈 must match exactly what you set
   });
 
-  return res.status(200).json({
-    success: true,
-    message: "Logout successful",
-  });
+  return res.status(200).json({ success: true, message: "Logout successful" });
+
 }
 
 
