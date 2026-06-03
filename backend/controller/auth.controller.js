@@ -41,10 +41,11 @@ export const Register = async (req, res) => {
     );
 
    res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 15*24*60*60*1000,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: true,
+      sameSite: "none",
+      //  secure: process.env.NODE_ENV !== "development",
     //   path: "/",
     });
     return res.status(201).json({ success: true, user:newUser });
@@ -83,11 +84,10 @@ export const Login = async (req, res) => {
     console.log("Generated JWT token:", token); // Debugging log
 
    res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 15*24*60*60*1000,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      path: "/",
+      secure: true,
+      sameSite: "none"
     });
 
    res.status(200).json({success: true, user});
