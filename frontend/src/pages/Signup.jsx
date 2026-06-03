@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/apapa-logo.png";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signup } from "../lib/api";
+import toast from "react-hot-toast";
+
 
 const Signup = () => {
     const [registerData, setRegisterData] = useState({
@@ -13,11 +15,16 @@ const Signup = () => {
 
 
 const queryClient = useQueryClient();
+const navigate = useNavigate();
 
 
  const { mutate:registerMutation, isPending, error} = useMutation({
     mutationFn: signup,
-    onSuccess:()=> queryClient.invalidateQueries({ queryKey: ["authUser"] }),
+   onSuccess: () => {
+			toast.success("Account created successfully");
+			queryClient.invalidateQueries({ queryKey: ["authUser"] });
+     		navigate("/feed"); // Redirect to the home page
+		}
   });
 
     const handleSignup = (e) => {

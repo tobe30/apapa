@@ -18,7 +18,7 @@ const Signin = () => {
         mutationFn: login,
         onSuccess: async () => {
         await queryClient.invalidateQueries({queryKey: ['authUser']});
-        navigate('/');
+        navigate('/feed');
 }
 
     })
