@@ -137,7 +137,7 @@ const logoutMutation = useMutation({
                 <Link to="/" onClick={() => setOpen(false)}>Home</Link>
                 <Link to="/feed" onClick={() => setOpen(false)}>Feed</Link>
                 <Link to="/rewards" onClick={() => setOpen(false)}>Rewards</Link>
-                <Link to="/profile" onClick={() => setOpen(false)}>Profile</Link>
+                <Link to={`/profile/${authUser?.user?._id}`} onClick={() => setOpen(false)}>Profile</Link>
               </div>
 
               {/* 🔥 MOBILE ASK BUTTON */}

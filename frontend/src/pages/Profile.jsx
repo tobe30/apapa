@@ -161,8 +161,16 @@ const { data: savedQuestions = [] } = useQuery({
   enabled: isOwnProfile,
 });
 
-const goToQuestion = (id) => {
-  navigate(`/feed/${id}`);
+const goToQuestion = (post) => {
+  const questionId =
+    post.questionId?._id ||
+    post.questionId ||
+    post.question?._id ||
+    post.question;
+
+  if (!questionId) return;
+
+  navigate(`/feed/${questionId}`);
 };
 
 const userBadges = authData?.badges || [];
@@ -471,7 +479,7 @@ const renderContent = () => {
     <>
        <p
       className="font-medium cursor-pointer hover:text-primary"
-      onClick={() => goToQuestion(post._id)}
+      onClick={() => goToQuestion(post)}
     >
       {post.question}
     </p>
@@ -559,7 +567,7 @@ const renderContent = () => {
     {/* FOOTER */}
     <div className="flex items-center gap-5 mt-4 pt-4 border-t border-gray-100 text-gray-500 text-sm">
 
-      <div onClick={() => goToQuestion(post._id)} className="flex items-center gap-1">
+      <div onClick={() => goToQuestion(post)} className="flex items-center gap-1">
   <ThumbsUp
     size={16}
     className={

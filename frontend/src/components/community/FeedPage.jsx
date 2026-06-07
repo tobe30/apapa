@@ -6,7 +6,8 @@ import {
   ThumbsDown,
   BadgeCheck,
   X,
-  TrendingUp
+  TrendingUp,
+  Loader2
 } from "lucide-react";
 import AskQuestionModal from "./AskQuestionModal";
 import MobileDiscover from "./MobileDiscover";
@@ -16,6 +17,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllQuestions, getAuthUser, getLeaderboard, QuestionDownvote, questionUpvote, SaveQuestion } from "../../lib/api";
 import { formatDistanceToNow } from "date-fns";
 import FeedSkeleton from "./skeletons/FeedSkeleton";
+import toast from "react-hot-toast";
 
 
 const FeedPage = () => {
@@ -26,6 +28,8 @@ const FeedPage = () => {
   const [selectedTag, setSelectedTag] = useState(null);
   const [openDiscover, setOpenDiscover] = useState(false);
   const [searchParams] = useSearchParams();
+  const [loadingUpvoteId, setLoadingUpvoteId] = useState(null);
+  const [loadingDownvoteId, setLoadingDownvoteId] = useState(null);
 
 useEffect(() => {
   const q = searchParams.get("query");
@@ -102,23 +106,49 @@ const popularQuestions = [...questions]
 // }
 // console.log("Fetched questions:", questions);
 
-  const upvoteMutation = useMutation({
-    mutationFn: questionUpvote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["questions"] });
-    },
-  });
+const { mutate: upvoteMutation } = useMutation({
+  mutationFn: questionUpvote,
+
+  onMutate: (id) => {
+    setLoadingUpvoteId(id); // 👈 track which one is loading
+  },
+
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["questions"] });
+  },
+
+  onError: (error) => {
+    toast.error(error.message);
+  },
+
+  onSettled: () => {
+    setLoadingUpvoteId(null); // 👈 reset after done
+  },
+});
 
   const categories = ["All", "Navigation", "Housing", "Safety", "Services", "Student Life", "General"];
 
 
 
-  const downvoteMutation = useMutation({
-    mutationFn: QuestionDownvote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["questions"] });
-    },
-  });
+const downvoteMutation = useMutation({
+  mutationFn: QuestionDownvote,
+
+  onMutate: (id) => {
+    setLoadingDownvoteId(id); // track which question is loading
+  },
+
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["questions"] });
+  },
+
+  onError: (error) => {
+    toast.error(error.message);
+  },
+
+  onSettled: () => {
+    setLoadingDownvoteId(null); // reset after request finishes
+  },
+});
 
   const { data: leaderboardData } = useQuery({
   queryKey: ["leaderboard"],
@@ -131,6 +161,9 @@ const saveMutation = useMutation({
     queryClient.invalidateQueries({ queryKey: ["questions"] });
     queryClient.invalidateQueries({ queryKey: ["authUser"] });
   },
+  onError: (error) => {
+      toast.error(error.message);
+    },
 });
 
 // const topContributors = leaderboardData?.leaderboard ?? [];
@@ -530,35 +563,43 @@ const handleShare = async (question) => {
                 <div className="flex items-center justify-between pt-3 border-t border-gray-300 gap-2">
                   <div className="flex items-center gap-1">
                     {/* Upvote */}
-                        <button
-                  onClick={() => upvoteMutation.mutate(q._id)}
-                  className="btn btn-ghost btn-sm flex items-center gap-1"
-                >
-                  <ThumbsUp
-                    className={`w-4 h-4 transition ${
-                      q.isUpvoted
-                        ? "text-primary"
-                        : "text-gray-400"
-                    }`}
-                    fill={q.isUpvoted ? "currentColor" : "none"}
-                  />
-                  {q.stats?.upvotes ?? 0}
-                </button>
+<button
+  onClick={() => upvoteMutation(q._id)}
+  disabled={loadingUpvoteId === q._id}
+  className="btn btn-ghost btn-sm flex items-center gap-1"
+>
+  {loadingUpvoteId === q._id ? (
+    <Loader2 className="w-4 h-4 animate-spin text-primary" />
+  ) : (
+    <ThumbsUp
+      className={`w-4 h-4 transition ${
+        q.isUpvoted ? "text-primary" : "text-gray-400"
+      }`}
+      fill={q.isUpvoted ? "currentColor" : "none"}
+    />
+  )}
 
- <button
-                  onClick={() => downvoteMutation.mutate(q._id)}
-                  className="btn btn-ghost btn-sm flex items-center gap-1"
-                >
-                  <ThumbsDown
-                    className={`w-4 h-4 transition ${
-                      q.isDownvoted
-                        ? "text-red-500"
-                        : "text-gray-400"
-                    }`}
-                    fill={q.isDownvoted ? "currentColor" : "none"}
-                  />
-                  {q.stats?.downvotes ?? 0}
-                </button>
+  <span>{q.stats?.upvotes ?? 0}</span>
+</button>
+
+<button
+  onClick={() => downvoteMutation.mutate(q._id)}
+  disabled={loadingDownvoteId === q._id}
+  className="btn btn-ghost btn-sm flex items-center gap-1"
+>
+  {loadingDownvoteId === q._id ? (
+    <Loader2 className="w-4 h-4 animate-spin text-red-500" />
+  ) : (
+    <ThumbsDown
+      className={`w-4 h-4 transition ${
+        q.isDownvoted ? "text-red-500" : "text-gray-400"
+      }`}
+      fill={q.isDownvoted ? "currentColor" : "none"}
+    />
+  )}
+
+  <span>{q.stats?.downvotes ?? 0}</span>
+</button>
 
                     {/* Comments */}
                     <button

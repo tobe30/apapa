@@ -122,6 +122,9 @@ const addAnswerMutation = useMutation({
     queryClient.invalidateQueries({ queryKey: ["question", id] });
     setAnswerText("");
   },
+   onError: (error) => {
+      toast.error(error.message);
+    },
 });
 
 
